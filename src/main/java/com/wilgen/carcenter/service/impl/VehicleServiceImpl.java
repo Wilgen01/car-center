@@ -16,6 +16,9 @@ public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
     private final BrandRepository brandRepository;
+    public static final String DELETE = "D";
+    public static final String INSERT = "I";
+    public static final String UPDATE = "U";
 
     public VehicleServiceImpl(VehicleRepository vehicleRepository, BrandRepository brandRepository) {
         this.vehicleRepository = vehicleRepository;
@@ -23,10 +26,10 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Vehicle> findAll() throws Exception{
+    public List<Vehicle> findAll() throws Exception {
         try {
             return vehicleRepository.findAll();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception("unexpected error", e);
         }
     }
@@ -49,7 +52,7 @@ public class VehicleServiceImpl implements VehicleService {
                     plate,
                     brandId,
                     vehicleDTO.getColor(),
-                    "I");
+                    INSERT);
 
             return vehicleDTO;
         } catch (Exception e) {
@@ -73,7 +76,7 @@ public class VehicleServiceImpl implements VehicleService {
         }
 
         try {
-            vehicleRepository.crud_vehicle(plate, brandId, vehicleDTO.getColor(), "U");
+            vehicleRepository.crud_vehicle(plate, brandId, vehicleDTO.getColor(), UPDATE);
             return vehicleDTO;
         } catch (Exception e) {
             throw new Exception("Unexpected error while updating vehicle");
@@ -94,7 +97,7 @@ public class VehicleServiceImpl implements VehicleService {
                     vehicleDTO.getPlate(),
                     vehicleDTO.getBrand_id(),
                     vehicleDTO.getColor(),
-                    "D");
+                    DELETE);
 
             return "Vehicle deleted successfully";
         } catch (Exception e) {
