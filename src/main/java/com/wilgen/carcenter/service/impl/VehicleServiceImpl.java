@@ -1,6 +1,5 @@
 package com.wilgen.carcenter.service.impl;
 
-import com.wilgen.carcenter.constant.CrudOperations;
 import com.wilgen.carcenter.dto.VehicleDTO;
 import com.wilgen.carcenter.model.Vehicle;
 import com.wilgen.carcenter.repository.BrandRepository;
