@@ -1,5 +1,6 @@
 package com.wilgen.carcenter.service.impl;
 
+import com.wilgen.carcenter.constant.CrudOperations;
 import com.wilgen.carcenter.dto.VehicleDTO;
 import com.wilgen.carcenter.model.Vehicle;
 import com.wilgen.carcenter.repository.BrandRepository;
@@ -35,8 +36,8 @@ public class VehicleServiceImpl implements VehicleService {
         String plate = vehicleDTO.getPlate();
         Long brandId = vehicleDTO.getBrand_id();
 
-        if (!vehicleRepository.existsById(plate)) {
-            throw new EntityNotFoundException("Vehicle with plate " + plate + " does not exist");
+        if (vehicleRepository.existsById(plate)) {
+            throw new EntityNotFoundException("Vehicle with plate " + plate + " already exist");
         }
 
         if (!brandRepository.existsById(brandId)) {
