@@ -3,6 +3,7 @@ package com.wilgen.carcenter.controller;
 import com.wilgen.carcenter.dto.Response;
 import com.wilgen.carcenter.dto.SuccessResponse;
 import com.wilgen.carcenter.dto.VehicleDTO;
+import com.wilgen.carcenter.model.Vehicle;
 import com.wilgen.carcenter.service.VehicleService;
 import com.wilgen.carcenter.service.impl.VehicleServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -26,7 +29,7 @@ public class VehicleController {
     @GetMapping
     public ResponseEntity<Response> findAll() throws Exception {
 
-        var result  = vehicleService.findAll();
+        List<Vehicle> result  = vehicleService.findAll();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new SuccessResponse<>("List", "ok", result ));

@@ -34,10 +34,10 @@ public class DataLoader implements CommandLineRunner {
         createBrands();
     }
 
-    public void createBaseUser(){
+    public void createBaseUser() {
         System.out.println("*************** CARGANDO USUARIO BASE ***************");
 
-        Boolean existBaseUser =  userRepository.existsByEmail("user@gmail.com");
+        Boolean existBaseUser = userRepository.existsByEmail("user@gmail.com");
         if (existBaseUser) return;
 
         Set<Role> roles = new HashSet<>();
@@ -53,8 +53,10 @@ public class DataLoader implements CommandLineRunner {
         userRepository.save(user);
     }
 
-    public void createBrands(){
+    public void createBrands() {
         System.out.println("*************** CARGANDO MARCAS ***************");
+
+        if (brandRepository.count() > 0) return;
 
         Brand brand1 = Brand.builder().name("Chevrolet").build();
         Brand brand2 = Brand.builder().name("Renault").build();
