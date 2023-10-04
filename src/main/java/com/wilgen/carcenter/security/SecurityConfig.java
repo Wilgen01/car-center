@@ -21,6 +21,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class SecurityConfig {
 
+    private final static String[] WHITE_LIST = {
+            "/api/auth/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml"
+    };
     private final JwtUtils jwtUtils;
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
@@ -39,7 +46,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api/auth/**").permitAll();
+                    auth.requestMatchers(WHITE_LIST).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
@@ -51,13 +58,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception
-    {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
