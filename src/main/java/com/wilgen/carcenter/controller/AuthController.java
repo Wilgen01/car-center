@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,9 +61,9 @@ public class AuthController {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Get Profile", "ok", user));
-        } catch (EntityNotFoundException e) {
+        } catch (UsernameNotFoundException e) {
             return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
+                    .status(HttpStatus.UNAUTHORIZED)
                     .body(new Response(e.getMessage(), "error"));
         } catch (Exception e) {
             return ResponseEntity
