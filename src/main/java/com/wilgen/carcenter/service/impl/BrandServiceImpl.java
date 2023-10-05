@@ -21,7 +21,7 @@ public class BrandServiceImpl implements BrandService {
         try {
             return brandRepository.findAll();
         } catch (Exception e) {
-            throw new Exception("unexpected error", e);
+            throw new Exception("Ha ocurrido un error inesperado", e);
         }
     }
 }
