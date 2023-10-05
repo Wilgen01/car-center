@@ -5,6 +5,7 @@ import com.wilgen.carcenter.model.Vehicle;
 import com.wilgen.carcenter.repository.BrandRepository;
 import com.wilgen.carcenter.repository.VehicleRepository;
 import com.wilgen.carcenter.service.VehicleService;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class VehicleServiceImpl implements VehicleService {
         try {
             return vehicleRepository.findAll();
         } catch (Exception e) {
-            throw new Exception("unexpected error", e);
+            throw new Exception("Ha ocurrido un error inesperado", e);
         }
     }
 
@@ -39,11 +40,11 @@ public class VehicleServiceImpl implements VehicleService {
         Long brandId = vehicleDTO.getBrand_id();
 
         if (vehicleRepository.existsById(plate)) {
-            throw new EntityNotFoundException("Vehicle with plate " + plate + " already exist");
+            throw new EntityExistsException("El vehículo con placa " + plate + " ya existe");
         }
 
         if (!brandRepository.existsById(brandId)) {
-            throw new EntityNotFoundException("Brand with ID " + brandId + " does not exist");
+            throw new EntityNotFoundException("La marca con ID " + brandId + " no existe");
         }
 
         try {
@@ -55,7 +56,7 @@ public class VehicleServiceImpl implements VehicleService {
 
             return vehicleDTO;
         } catch (Exception e) {
-            throw new Exception("unexpected error");
+            throw new Exception("Ha ocurrido un error inesperado");
         }
 
 
@@ -67,18 +68,18 @@ public class VehicleServiceImpl implements VehicleService {
         Long brandId = vehicleDTO.getBrand_id();
 
         if (!vehicleRepository.existsById(plate)) {
-            throw new EntityNotFoundException("Vehicle with plate " + plate + " does not exist");
+            throw new EntityNotFoundException("El vehículo con placa " + plate + " no existe");
         }
 
         if (!brandRepository.existsById(brandId)) {
-            throw new EntityNotFoundException("Brand with ID " + brandId + " does not exist");
+            throw new EntityNotFoundException("La marca con ID " + brandId + " no existe");
         }
 
         try {
             vehicleRepository.crud_vehicle(plate, brandId, vehicleDTO.getColor(), UPDATE);
             return vehicleDTO;
         } catch (Exception e) {
-            throw new Exception("Unexpected error while updating vehicle");
+            throw new Exception("Ha ocurrido un error inesperado");
         }
 
     }
@@ -88,7 +89,7 @@ public class VehicleServiceImpl implements VehicleService {
         String plate = vehicleDTO.getPlate();
 
         if (!vehicleRepository.existsById(plate)) {
-            throw new EntityNotFoundException("Vehicle with plate " + plate + " does not exist");
+            throw new EntityNotFoundException("El vehículo con placa " + plate + " no existe");
         }
 
         try {
@@ -100,7 +101,7 @@ public class VehicleServiceImpl implements VehicleService {
 
             return "Vehicle deleted successfully";
         } catch (Exception e) {
-            throw new Exception("Unexpected error while deleting vehicle");
+            throw new Exception("Ha ocurrido un error inesperado");
         }
     }
 }

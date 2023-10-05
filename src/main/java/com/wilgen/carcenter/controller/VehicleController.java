@@ -6,6 +6,7 @@ import com.wilgen.carcenter.dto.VehicleDTO;
 import com.wilgen.carcenter.model.Vehicle;
 import com.wilgen.carcenter.service.VehicleService;
 import com.wilgen.carcenter.service.impl.VehicleServiceImpl;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +44,9 @@ public class VehicleController {
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(new SuccessResponse<>("Created", "ok", createdVehicle));
-        } catch (EntityNotFoundException e) {
+        } catch (EntityExistsException e) {
             return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
+                    .status(HttpStatus.CONFLICT)
                     .body(new Response(e.getMessage(), "error"));
         } catch (Exception e) {
             return ResponseEntity

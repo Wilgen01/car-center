@@ -27,14 +27,14 @@ public class UserServiceImpl implements UserService {
     public String save(User user) throws Exception {
 
         if (userRepository.existsByEmail(user.getEmail())){
-            throw new EntityExistsException("The email is already taken");
+            throw new EntityExistsException("Ya existe un usuario con este correo");
         }
 
         try {
             User userCreated = userRepository.save(user);
             return jwtUtils.generateAccesToken(userCreated.getEmail());
         }catch (Exception e){
-            throw new Exception("Unexpected error while creating user");
+            throw new Exception("Ha ocurrido un error inesperado");
         }
 
     }
