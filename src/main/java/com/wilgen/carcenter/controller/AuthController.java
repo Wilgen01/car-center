@@ -6,16 +6,17 @@ import com.wilgen.carcenter.dto.SuccessResponse;
 import com.wilgen.carcenter.model.ERole;
 import com.wilgen.carcenter.model.Role;
 import com.wilgen.carcenter.model.User;
-import com.wilgen.carcenter.repository.UserRepository;
 import com.wilgen.carcenter.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityExistsException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@RequestBody CreateUserDTO createUserDTO) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
         Set<Role> roles = createUserDTO.getRoles().stream()
                 .map(role -> Role.builder()
                         .name(ERole.valueOf(role))
@@ -42,13 +43,33 @@ public class AuthController {
                 .collect(Collectors.toSet());
 
         User user = User.builder()
+                .name(createUserDTO.getName())
                 .password(passwordEncoder.encode(createUserDTO.getPassword()))
                 .email(createUserDTO.getEmail())
                 .roles(roles)
                 .build();
 
-        userService.save(user);
-        return ResponseEntity.ok(user);
+        try {
+            String token = userService.save(user);
+
+            Map<String, Object> httpResponse = new HashMap<>();
+            httpResponse.put("token", token);
+            httpResponse.put("Message", "Autenticacion Correcta");
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(httpResponse);
+        }catch (EntityExistsException e){
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new Response(e.getMessage(), "error"));
+        }catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new Response(e.getMessage(), "error"));
+        }
+
+
     }
 
     @GetMapping("/profile")
@@ -61,7 +82,7 @@ public class AuthController {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Get Profile", "ok", user));
-        } catch (UsernameNotFoundException e) {
+        } catch (EntityExistsException e) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(new Response(e.getMessage(), "error"));
