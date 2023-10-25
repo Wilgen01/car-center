@@ -1,5 +1,6 @@
 package com.wilgen.carcenter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,4 +16,8 @@ public class Vehicle {
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
