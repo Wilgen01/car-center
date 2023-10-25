@@ -10,7 +10,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,13 +27,22 @@ public class VehicleController {
     }
 
 
-    @GetMapping
     public ResponseEntity<Response> findAll() throws Exception {
 
-        List<Vehicle> result  = vehicleService.findAll();
+        List<Vehicle> result = vehicleService.findAll();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new SuccessResponse<>("List", "ok", result ));
+                .body(new SuccessResponse<>("List", "ok", result));
+    }
+
+    @GetMapping
+    public ResponseEntity<Response> findAllByUser() throws Exception {
+        String userEmail = getEmailUserAuth();
+
+        List<Vehicle> result = vehicleService.findAllByUser(userEmail);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new SuccessResponse<>("List", "ok", result));
     }
 
     @PostMapping
@@ -93,5 +102,9 @@ public class VehicleController {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new Response(e.getMessage(), "error"));
         }
+    }
+
+    private String getEmailUserAuth() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }
