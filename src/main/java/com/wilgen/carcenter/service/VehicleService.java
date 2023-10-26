@@ -8,6 +8,7 @@ import java.util.List;
 public interface VehicleService {
 
     List<Vehicle> findAll() throws Exception;
+
     List<Vehicle> findAllByUser(String email) throws Exception;
 
     VehicleDTO save(VehicleDTO vehicleDTO) throws Exception;

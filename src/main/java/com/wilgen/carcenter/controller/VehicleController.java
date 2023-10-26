@@ -46,7 +46,7 @@ public class VehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> create(@RequestBody VehicleDTO vehicleDTO) {
+    public ResponseEntity<Response> create(@ModelAttribute VehicleDTO vehicleDTO) {
         try {
             VehicleDTO createdVehicle = vehicleService.save(vehicleDTO);
 
